@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pizza Delivery App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <h1>Pizza Delivery App</h1>
+    <p>Hot and fresh pizza delivered to your doorstep!</p>
+  </header>
+
+  <main class="container">
+    <!-- Login Section -->
+    <section class="login-section">
+      <h2>Login</h2>
+      <form id="loginForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" placeholder="Enter your username" required>
+        <button type="submit">Login</button>
+      </form>
+    </section>
+
+    <!-- Pizza Order Section -->
+    <section class="order-section">
+      <h2>Order Your Pizza</h2>
+      <p>Welcome, <span id="userDisplay">Guest</span>! Choose your favorite pizza and track your delivery.</p>
+      <button id="orderPizzaBtn">Order Pizza</button>
+    </section>
+
+    <!-- GPS Tracking Section -->
+    <section class="tracking-section">
+      <h2>Delivery Tracking</h2>
+      <p id="trackingStatus">Your delivery status will appear here.</p>
+      <div class="map-placeholder">
+        <p>GPS Map Placeholder</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Created with ❤️ by [Your Name]</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+// Select DOM elements
+const orderPizzaBtn = document.getElementById("orderPizzaBtn");
+const trackingStatus = document.getElementById("trackingStatus");
+
+// Pizza customization options and prices
+const pizzaOptions = {
+  size: {
+    small: 8,
+    medium: 10,
+    large: 12,
+  },
+  crust: {
+    thin: 2,
+    thick: 3,
+    stuffed: 4,
+  },
+  toppings: {
+    pepperoni: 1,
+    mushrooms: 1,
+    onions: 1,
+    olives: 1,
+    cheese: 1,
+  },
+};
+
+// Function to customize pizza order
+function customizePizzaOrder() {
+  // Prompt user for size
+  const size = prompt(
+    "Choose your pizza size: small ($8), medium ($10), large ($12)"
+  ).toLowerCase();
+
+  if (!pizzaOptions.size[size]) {
+    alert("Invalid size selected. Please try again.");
+    return;
+  }
+
+  // Prompt user for crust
+  const crust = prompt(
+    "Choose your crust: thin ($2), thick ($3), stuffed ($4)"
+  ).toLowerCase();
+
+  if (!pizzaOptions.crust[crust]) {
+    alert("Invalid crust selected. Please try again.");
+    return;
+  }
+
+  // Prompt user for toppings
+  const toppings = prompt(
+    "Choose your toppings (comma-separated): pepperoni, mushrooms, onions, olives, cheese ($1 each)"
+  )
+    .toLowerCase()
+    .split(",")
+    .map((topping) => topping.trim());
+
+  // Validate toppings
+  const invalidToppings = toppings.filter(
+    (topping) => !pizzaOptions.toppings[topping]
+  );
+
+  if (invalidToppings.length > 0) {
+    alert(`Invalid toppings selected: ${invalidToppings.join(", ")}. Please try again.`);
+    return;
+  }
+
+  // Calculate total price
+  const sizePrice = pizzaOptions.size[size];
+  const crustPrice = pizzaOptions.crust[crust];
+  const toppingsPrice = toppings.length * pizzaOptions.toppings.pepperoni; // All toppings cost $1
+  const totalPrice = sizePrice + crustPrice + toppingsPrice;
+
+  // Display order summary
+  trackingStatus.innerHTML = `
+    <strong>Order Summary:</strong><br>
+    Size: ${size} ($${sizePrice})<br>
+    Crust: ${crust} ($${crustPrice})<br>
+    Toppings: ${toppings.join(", ")} ($${toppingsPrice})<br>
+    <strong>Total Price:</strong> $${totalPrice}
+  `;
+
+  alert("Your pizza order has been placed! Total: $" + totalPrice);
+}
+
+// Add event listener to the "Order Pizza" button
+orderPizzaBtn.addEventListener("click", customizePizzaOrder);
